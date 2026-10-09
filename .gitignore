@@ -1,0 +1,18 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environment and IDE
+.venv/
+.idea/
+.vscode/
+
+# Build artifacts & logs
+*.log
+*.elf
+*.bin
+*.hex
+*.map
+Debug*/
+Release*/
