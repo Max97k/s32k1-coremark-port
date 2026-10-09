@@ -1,21 +1,23 @@
 # EEMBC CoreMark 1.0 Port for NXP S32K144W (Cortex-M4F)
 
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
-[![Target: NXP S32K144W](https://img.shields.io/badge/Target-NXP%20S32K144W-orange.svg)](#hardware--software-specifications)
-[![CoreMark: 78.13 @ 48MHz](https://img.shields.io/badge/CoreMark-78.13%20%40%2048MHz-brightgreen.svg)](#benchmark-results)
-[![EEMBC: Validated](https://img.shields.io/badge/EEMBC-Validated-success.svg)](#benchmark-results)
+[![Target: NXP S32K144W](https://img.shields.io/badge/Target-NXP%20S32K144W-orange.svg)](#2-hardware--software-specifications)
+[![CoreMark: 78.13 @ 48MHz](https://img.shields.io/badge/CoreMark-78.13%20%40%2048MHz-brightgreen.svg)](#1-benchmark-results)
+[![EEMBC: Validated](https://img.shields.io/badge/EEMBC-Validated-success.svg)](#1-benchmark-results)
+[![Toolchain: GCC 10.2](https://img.shields.io/badge/Toolchain-GCC%2010.2%20(0%20errors)-brightgreen.svg)](https://gcc.gnu.org)
 
 English | [繁體中文](README_zh.md)
 
 ---
 
-An official, hardware-validated **EEMBC® CoreMark® 1.0** port for the **NXP Semiconductors® S32K144W** automotive microcontroller (Arm® Cortex®-M4F @ 48 MHz with FPU).
+An official, hardware-validated **EEMBC® CoreMark® 1.0** port and ready-to-import **S32 Design Studio** project for the **NXP Semiconductors® S32K144W** automotive microcontroller (Arm® Cortex®-M4F @ 48 MHz with FPU).
 
 This project provides:
-- **Zero-overhead Hardware Timing**: Implemented via ARM Cortex-M4 **DWT Cycle Counter** (`DWT->CYCCNT`).
+- **Direct Workspace Import**: Complete Eclipse/S32DS project structure (`.project`, `.cproject`, `.mex`) ready to build out-of-the-box.
+- **Zero-Overhead Hardware Timing**: Implemented via Arm Cortex-M4 **DWT Cycle Counter** (`DWT->CYCCNT`).
 - **Physical UART Streaming**: Configured for S32K14WEVB OpenSDA Virtual COM port (`115200 8N1`).
 - **Real-Time LED Status**: Green LED (benchmarking in progress) and Blue LED (validation passed).
-- **Automated Validation**: Automated building, flashing, and verification support.
+- **Dual Build Workflows**: Supports both S32DS GUI build and headless command-line (CLI) build and flash.
 
 ---
 
@@ -23,14 +25,13 @@ This project provides:
 
 - [1. Benchmark Results](#1-benchmark-results)
 - [2. Hardware & Software Specifications](#2-hardware--software-specifications)
-- [3. Legal & Open Source Compliance Note](#3-legal--open-source-compliance-note)
-- [4. Repository Structure](#4-repository-structure)
-- [5. Getting Started & Reproduction Guide](#5-getting-started--reproduction-guide)
-  - [5.1 Prerequisites](#51-prerequisites)
-  - [5.2 Option A: Automated Build & Flash via Python Harness](#52-option-a-automated-build--flash-via-python-harness)
-  - [5.3 Option B: Manual Integration via S32 Design Studio GUI](#53-option-b-manual-integration-via-s32-design-studio-gui)
-- [6. Upstream References](#6-upstream-references)
-- [7. Trademarks & License](#7-trademarks--license)
+- [3. Repository Structure](#3-repository-structure)
+- [4. Getting Started & Build Workflows](#4-getting-started--build-workflows)
+  - [4.1 Prerequisites](#41-prerequisites)
+  - [4.2 Option A: Build and Debug via S32 Design Studio (IDE)](#42-option-a-build-and-debug-via-s32-design-studio-ide)
+  - [4.3 Option B: Headless Build and Flash via Command Line (CLI)](#43-option-b-headless-build-and-flash-via-command-line-cli)
+- [5. Upstream References](#5-upstream-references)
+- [6. Trademarks & License](#6-trademarks--license)
 
 ---
 
@@ -105,26 +106,34 @@ CoreMark 1.0 : 78.130087 / GCC 10.2.0 / INTERNAL_SRAM
 
 ---
 
-## 3. Legal & Open Source Compliance Note
-
-To comply with NXP Software Licensing Agreements (SLA), **proprietary NXP Real-Time Drivers (RTD) and SDK source code are intentionally NOT redistributed in this repository**.
-
-Users generate or import the official NXP RTD drivers directly using their own installed copy of S32 Design Studio. This repository distributes:
-1. `port/core_portme.c` and `port/core_portme.h` (Apache-2.0).
-2. Automation test scripts (Apache-2.0).
-3. Porting and benchmark documentation.
-
----
-
-## 4. Repository Structure
+## 3. Repository Structure
 
 ```
 s32k1-coremark-port/
-├── port/
+├── board/                         # Pin and clock initialization configs (MEX generated)
+│   ├── Port_Ci_Port_Ip_Cfg.c
+│   └── Port_Ci_Port_Ip_Cfg.h
+├── include/                       # CoreMark & Porting header files
+│   ├── check_example.h
+│   ├── coremark.h                 # EEMBC CoreMark 1.0 algorithm definitions
+│   └── core_portme.h              # S32K144W port definitions & timing hooks
+├── Project_Settings/
+│   ├── Debugger/                  # PEMicro GDB launch configurations
+│   ├── Linker_Files/              # S32K144W Flash & RAM linker scripts (.ld)
+│   └── Startup_Code/              # CMSIS startup, vector table, NVIC configuration
+├── src/                           # Source files
+│   ├── core_list_join.c           # CoreMark list processing benchmark
+│   ├── core_main.c                # CoreMark benchmark entrypoint
+│   ├── core_matrix.c              # CoreMark matrix manipulation benchmark
 │   ├── core_portme.c              # S32K144W hardware porting (DWT, LPUART1, LEDs)
-│   └── core_portme.h              # CoreMark port configuration (seeds, timing hooks)
-├── scripts/
-│   └── test_coremark_hardware.py  # Automation script for S32DS RPC & COM5 capture
+│   ├── core_state.c               # CoreMark state machine benchmark
+│   ├── core_util.c                # CoreMark CRC calculation utilities
+│   └── ee_printf.c                # Embedded lightweight formatting print
+├── tools/
+│   └── flash_target.py            # Automated OpenSDA PEMicro flash & reset tool
+├── Gpio_Dio_Ip_Example.mex        # S32 Configuration Tools project file
+├── .cproject                      # Eclipse CDT build configuration
+├── .project                       # Eclipse project descriptor
 ├── .gitignore
 ├── LICENSE                        # Apache 2.0 License
 ├── README.md                      # English documentation
@@ -133,51 +142,53 @@ s32k1-coremark-port/
 
 ---
 
-## 5. Getting Started & Reproduction Guide
+## 4. Getting Started & Build Workflows
 
-### 5.1 Prerequisites
+### 4.1 Prerequisites
 1. Install [NXP S32 Design Studio for S32 Platform (v3.6.11 or later)](https://www.nxp.com/s32ds).
 2. Install **PlatformSDK_S32K1_S32M24** (RTD 3.0.0 or compatible) via *Help -> Extensions and Updates*.
 3. Install OpenSDA USB drivers for PEMicro.
 
 ---
 
-### 5.2 Option A: Automated Build & Flash via Python Harness
+### 4.2 Option A: Build and Debug via S32 Design Studio (IDE)
 
-1. Clone official CoreMark and this repository into your workspace:
-   ```bash
-   git clone https://github.com/eembc/coremark.git
-   git clone https://github.com/Max97k/s32k1-coremark-port.git
-   ```
-2. Run the included Python automation test harness:
-   ```bash
-   python scripts/test_coremark_hardware.py
-   ```
-   The script communicates with S32DS on port 8088, launches the debugger, monitors `portable_fini`, captures COM5 UART streaming, and verifies the CRC checksum.
+1. Launch S32 Design Studio.
+2. Select **File $\to$ Import... $\to$ General $\to$ Existing Projects into Workspace**.
+3. Browse to this cloned repository root and click **Finish**.
+4. In the Project Explorer, right-click the project and select **S32 Configuration Tool $\to$ Update Code** to generate local RTD driver bindings.
+5. Click **Project $\to$ Build Project** (or press `Ctrl+B`). Verify build output reports `0 errors, 0 warnings`.
+6. Connect the board via USB (`J7`). Open your serial terminal (PuTTY / Tera Term) connected to the OpenSDA COM port at 115200 baud.
+7. Open **Run $\to$ Debug Configurations...**, select `CoreMark_S32K144W_Debug_FLASH_PNE`, and click **Debug**.
+8. Resume execution in GDB. The Green LED will illuminate during the ~15s run, followed by the Blue LED when complete. The terminal will display the full benchmark report.
 
 ---
 
-### 5.3 Option B: Manual Integration via S32 Design Studio GUI
+### 4.3 Option B: Headless Build and Flash via Command Line (CLI)
 
-1. **Create or Duplicate Project**:
-   - In S32DS, duplicate an existing working S32K144W RTD project (e.g., `Gpio_Dio_Ip_Example_S32K144W`) as `CoreMark_S32K144W`.
-2. **Add CoreMark Source Files**:
-   - From official `coremark/` repo, copy into `src/`:
-     - `core_main.c`, `core_list_join.c`, `core_matrix.c`, `core_state.c`, `core_util.c`, `ee_printf.c`
-     - Copy `coremark.h` into `include/`.
-   - Rename existing `main.c` in `src/` to `main.c.bak`.
-3. **Add S32K144W Port Files**:
-   - Copy `port/core_portme.c` into `src/`.
-   - Copy `port/core_portme.h` into `include/`.
-4. **Build & Debug**:
-   - Click **Project $\to$ Build Project** (Confirm 0 Errors, 0 Warnings).
-   - Open a serial terminal (PuTTY / Tera Term) connected to the OpenSDA COM port at 115200 baud.
-   - Right-click project $\to$ **Debug As** $\to$ **GDB PEMicro Interface Debugging**.
-   - Resume execution in GDB. The Green LED will turn on during the ~15s run, followed by the Blue LED when complete.
+The project can be built and flashed headlessly without launching the Eclipse GUI:
+
+```powershell
+# 1. Add S32DS build tools and compiler to PATH
+$env:PATH = "C:\NXP\S32DS.3.6.11\S32DS\build_tools\msys32\usr\bin;C:\NXP\S32DS.3.6.11\S32DS\build_tools\gcc_v10.2\gcc-10.2-arm32-eabi\bin;" + $env:PATH
+
+# 2. Invoke GNU Make in the build directory
+cd Debug_FLASH
+make -j8 all
+
+# 3. Flash to target board using the headless PEMicro script
+python ../tools/flash_target.py
+```
+
+Expected build size output:
+```
+   text    data     bss     dec     hex filename
+  43868     272   10520   54660    d584 CoreMark_S32K144W.elf
+```
 
 ---
 
-## 6. Upstream References
+## 5. Upstream References
 
 * [EEMBC CoreMark Official Repository](https://github.com/eembc/coremark) — The official benchmark algorithm suite.
 * [NXP S32 Design Studio IDE](https://www.nxp.com/s32ds) — Official automotive microcontroller IDE.
@@ -186,7 +197,7 @@ s32k1-coremark-port/
 
 ---
 
-## 7. Trademarks & License
+## 6. Trademarks & License
 
 - Licensed under the [Apache License, Version 2.0](LICENSE).
 - **EEMBC®** and **CoreMark®** are registered trademarks of the Embedded Microprocessor Benchmark Consortium.
