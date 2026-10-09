@@ -171,6 +171,20 @@ s32k1-coremark-port/
 
 ---
 
+
+---
+
+## References & Upstream Projects
+
+This project builds upon and integrates with the following official upstream open-source repositories:
+
+| Project | Repository / Link | Description |
+| :--- | :--- | :--- |
+| **EEMBC CoreMark** | [![GitHub](https://img.shields.io/badge/GitHub-eembc%2Fcoremark-181717?logo=github)](https://github.com/eembc/coremark) | The official EEMBC CoreMark benchmark algorithm suite. |
+| **NXP S32DS AI Support** | [![GitHub](https://img.shields.io/badge/GitHub-nxp--agentic--ai%2Fs32--ds--ai--support-181717?logo=github)](https://github.com/nxp-agentic-ai/s32-ds-ai-support) | NXP's official Model Context Protocol (MCP) server & agentic AI suite for S32 Design Studio. |
+| **EEMBC Official Website** | [https://www.eembc.org/coremark/](https://www.eembc.org/coremark/) | CoreMark benchmark documentation, scoring guidelines, and certification rules. |
+| **NXP Community** | [Agentic AI Development](https://community.nxp.com/t5/Agentic-AI-Development/tkb-p/agentic-ai-development) | Official NXP discussion community for AI-assisted embedded workflows. |
+
 ## License
 
 The files in this repository are licensed under the [Apache License, Version 2.0](LICENSE).  
