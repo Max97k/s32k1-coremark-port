@@ -178,12 +178,14 @@ s32k1-coremark-port/
 
 This project builds upon and integrates with the following official upstream open-source repositories:
 
-| Project | Repository / Link | Description |
+| Resource / Project | Link / Badge | Description |
 | :--- | :--- | :--- |
 | **EEMBC CoreMark** | [![GitHub](https://img.shields.io/badge/GitHub-eembc%2Fcoremark-181717?logo=github)](https://github.com/eembc/coremark) | The official EEMBC CoreMark benchmark algorithm suite. |
 | **NXP S32DS AI Support** | [![GitHub](https://img.shields.io/badge/GitHub-nxp--agentic--ai%2Fs32--ds--ai--support-181717?logo=github)](https://github.com/nxp-agentic-ai/s32-ds-ai-support) | NXP's official Model Context Protocol (MCP) server & agentic AI suite for S32 Design Studio. |
+| **NXP S32 Design Studio (IDE)** | [S32 Design Studio for S32 Platform](https://www.nxp.com/design/design-center/software/automotive-software-and-tools/s32-design-studio-ide:S32-DESIGN-STUDIO-IDE) | Official IDE and tooling suite for NXP automotive and industrial microcontrollers. |
+| **NXP S32K14WEVB Evaluation Board** | [S32K14WEVB-Q064 Product Page](https://www.nxp.com/design/design-center/development-boards/automotive-development-platforms/s32k-mcu-platforms/s32k14w-q064-evaluation-board-for-automotive-general-purpose:S32K14WEVB-Q064) | Official hardware documentation, schematics, and user guides for S32K14WEVB-Q064. |
 | **EEMBC Official Website** | [https://www.eembc.org/coremark/](https://www.eembc.org/coremark/) | CoreMark benchmark documentation, scoring guidelines, and certification rules. |
-| **NXP Community** | [Agentic AI Development](https://community.nxp.com/t5/Agentic-AI-Development/tkb-p/agentic-ai-development) | Official NXP discussion community for AI-assisted embedded workflows. |
+| **NXP Community** | [Agentic AI Development Community](https://community.nxp.com/t5/Agentic-AI-Development/tkb-p/agentic-ai-development) | Official NXP discussion forum for AI-assisted embedded workflows. |
 
 ## License
 
