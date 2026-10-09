@@ -59,16 +59,34 @@ CoreMark 1.0 : 78.130087 / GCC 10.2.0 / INTERNAL_SRAM
 
 ---
 
-## Hardware Setup
+## Hardware & Software Specifications (Full Environment BOM)
 
-- **Board**: NXP S32K14WEVB-Q064 (PCB 46873 RevB)
-- **Debugger**: Onboard OpenSDA (P&E Micro PEMicro USB)
-- **Serial Port**: OpenSDA CDC Virtual COM (`115200 baud, 8 data bits, 1 stop bit, no parity`)
-  - **TX Pin**: `PTC9` (routed to OpenSDA transceiver via R680)
-  - **RX Pin**: `PTC8` (routed to OpenSDA transceiver via R679)
-- **Status LEDs**:
-  - Green LED: `PTE0` (Benchmarking Active)
-  - Blue LED: `PTE3` (Validation Passed)
+### 1. Hardware Specifications (DUT & Test Bench)
+| Component | Item Name / Designation | Exact Part Number / Version | Details & Characteristics |
+| :--- | :--- | :--- | :--- |
+| **Target MCU** | NXP S32K144W | FS32K144WFT0MLHT (NXP_S32K1xx_S32K144WF512M8) | 32-bit ARM Cortex-M4F, 512 KB Flash, 64 KB SRAM, FPv4-SP-D16 FPU |
+| **Package** | LQFP64 | 64-pin Low Profile Quad Flat Package (10x10 mm, 0.5 mm pitch) | Pinout revision matches S32K144W_LQFP64 |
+| **Core Clock** | RUN Mode Clock | 48.0 MHz | Driven by Fast Internal Reference Clock (FIRC 48MHz, 1% tolerance) |
+| **Target Board** | NXP S32K144W EVB | XS32K14WEVB-Q064 | Schematic: SCH-46873 RevB, PCB: PCB 46873 RevA |
+| **Debug Probe** | Onboard OpenSDA | P&E Microcomputer Systems OpenSDA | USB VID:PID = 1357:0089, Serial = SDA6C761E5B, Port = USB1 |
+| **Virtual COM** | CDC Serial Port | OpenSDA - CDC Serial Port (COM5) | 115200 Baud, 8 Data Bits, 1 Stop Bit, No Parity |
+| **UART Routing** | LPUART1 | PTC9 (TX) / PTC8 (RX) | Level-shifted through U2 to OpenSDA controller (J5 headers isolated) |
+| **Status LEDs** | RGB LED Indicators | Red: PTE7, Green: PTE0, Blue: PTE3 | Active High (Green = Benchmarking, Blue = Validation Passed) |
+
+### 2. Software, IDE & Toolchain Versions
+| Layer | Software / Component | Exact Version / Build ID | Distribution / Source |
+| :--- | :--- | :--- | :--- |
+| **IDE Platform** | NXP S32 Design Studio | S32DS.3.6.11 (Build ID: 3.6.11.202609221336) | Product: com.nxp.s32ds.platform.ide.product |
+| **AI MCP Plugin** | S32DS MCP Server Plugin | 1.0.3.202609171039 | com.nxp.s32ds.mcp.server (JSON-RPC server on TCP 8088) |
+| **Agentic AI Suite** | S32DS Agentic AI Toolkit | 1.0.0 (s32ds-agentic-ai-installer-1.0.0.pyz) | FastMCP 3.3.1 + Python 3.11+ MCP Gateway |
+| **RTD / SDK** | PlatformSDK S32K1/S32M24 | RTD 3.0.0 | Build: S32K1_RTD_3_0_0_D2503_ASR_REL_4_7_REV_0000_20250307 |
+| **AUTOSAR Spec** | AUTOSAR Architecture | AUTOSAR 4.7.0 (ASR_REL_4_7_REV_0000) | Standard automotive abstraction headers |
+| **Compiler** | S32DS GCC for ARM | GCC 10.2.0 (Build rev g5963bc8, BLD = 1728) | Binary: rm-none-eabi-gcc.exe |
+| **C Runtime Library**| Newlib Nano | 
+ewlib-nano (--specs=nano.specs) | Embedded lightweight stdio/stdlib implementation |
+| **GDB Server** | P&E GDB Server Console | pegdbserver_console.exe Version 10.02.00.00 | Plugin: com.pemicro.debug.gdbjtag.pne_6.1.8.202603121731 |
+| **P&E Core Library** | PEMicro Unit NGS DLL | unit_ngs_arm_internal.dll Version 1.3.5 | com.pemicro.core_1.3.5 |
+| **Benchmark Suite**| EEMBC CoreMark | Version 1.0 | Official GitHub eembc/coremark (Apache-2.0) |
 
 ---
 
